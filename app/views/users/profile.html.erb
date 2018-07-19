@@ -1,0 +1,167 @@
+
+<!--언어별 랭킹, 언어별 바이트 합-->
+
+<h1>프로필 상세 페이지</h1>
+<h1>회원프로필사진</h1>
+<%unless @user.user_image.nil?%>
+<p><img src="<%=@user.user_image.thumb.url%>"></p>
+<%end%>
+<h1>자기소개</h1>
+<p><%=@user.user_contents%></p>
+<hr>
+<canvas id="myChart" width="400" height="400"></canvas>
+<div id="loading">
+    <img src="/Preloader_3.gif">
+</div>
+
+
+
+
+<h1><%=@user.user_name%>님의 보유 스킬</h1>
+<ul>
+<%@user.skills.each do |skill| %>
+    <li><%=skill.skill_contents%></li>  
+<%end%>
+</ul>
+<h1><%=@user.user_name%>님의 관심 카테고리</h1>
+<ul>
+<%@user.categories.each do |category| %>
+    <li><%=category.category_contents%></li>  
+<%end%>
+</ul>
+<h1><%=@user.user_name%>님의 경험치</h1>
+<p>경험치:<%=@user.user_point%></p>
+<p><%=@user.user_name%>님의 주소:<%=@user.address%></p>
+<p><%=@user.user_name%>님의 전화번호:<%=@user.tel%></p>
+<p><%=@user.user_name%>님의 나이:<%=@user.birth%></p>
+<h1><%=@user.user_name%>님의 포트폴리오</h1>
+<ul>
+<%@user.portfolios.each do |portfolio|%>
+<h3>포트폴리오 제목</h3>
+<li><a href="/users/<%=portfolio.id%>/portfolio_show"><%=portfolio.portfolio_title%></a></li>
+<h3>포트폴리오 사진</h3>
+<li><img src="<%=portfolio.portfolio_file.thumb.url%>"></li>
+<h3>포트폴리오 내용</h3>
+<li><%=portfolio.portfolio_contents%></li>
+<h3>포트폴리오 스킬</h3>
+<ul>
+    <%portfolio.skills.each do |skill|%>
+        <li><%=skill.skill_contents%></li>
+    <%end%>
+</ul>
+<%end%>
+</ul>
+<a href="/users/portfolio">포트폴리오 등록</a>
+<a href="/users/new">프로필 수정</a>
+<a href="/users/list">리스트로 이동</a>
+
+
+
+
+
+
+<h1>댓글 창</h1>
+<textarea rows="4" cols="50" placeholder="댓글 입력하세요"class="introduce"name="introduce">
+</textarea>
+<button value="댓글 등록하기"></button>
+
+  
+   
+</ul>
+
+
+<script>
+    $(document).ready(function(){
+        $.ajax({
+            url:"/users/github",
+            type:"POST"
+           
+        })
+        
+        
+        
+        // function github_rank(arr){
+        //   const github_language=arr.reduce(function(a,x){
+        //     for(let language in x){        
+        //         if(!a[language]){
+        //             a[language] = x[language]  
+        //         }else{
+        //               let result = a[language]+x[language];
+        //               a[language] = result;
+        //         };
+        //     }
+        //      return a
+        //     },{});
+    
+        //     let result=ranking(github_language);
+        //     for(let i of result){
+        //         console.log(i)
+        //     }
+        //     $.ajax({
+        //         url:"/users/github",
+        //         type:"POST",
+        //         data:{
+        //             github_language: github_language,
+        //             result:result
+        //         }
+        //     })
+        // }
+        
+        // function ranking(map){
+        //         let result =[];
+        //         map[Symbol.iterator] = function* () {
+        //           yield* [...this.entries()].sort((a, b) => b[1] - a[1] );
+        //         }
+        //         for (let [key, value] of map) {     // get data sorted
+        //             result.push(key);
+        //         }
+        //         return result;
+        // }
+
+        
+        
+        // (function(){
+        // var languages=[];
+        // console.time('a')
+        // $.ajax({
+        //     url:'https://api.github.com/users/Teatreeessential/repos',
+        //     type:'GET',
+        //     header:{Authorization:'13b16d30619fb86137aa257ae49834faa9db75e7'},
+        //     success:function(data){
+        //       for(let obj of data){
+        //           $.ajax({
+        //               url:`${obj.languages_url}`,
+        //               type:'GET',
+                       
+        //               header:{Authorization:'13b16d30619fb86137aa257ae49834faa9db75e7'},
+        //               success:function(data){
+        //                   console.log(data);
+        //                   languages.push(data);
+        //               }
+        //           })
+        //       }
+               
+               
+        //     }
+        // })
+        //     $.ajax({
+        //       url:"/users/github",
+        //         type:"POST",
+        //         data:{
+        //             languages: languages
+        //         }     
+        //     })
+        // })();
+        // console.timeEnd('a')
+        //     setTimeout(github_rank,6*1000,languages);
+        // })();
+        
+        
+        
+        
+        
+         
+    })
+</script>
+
+

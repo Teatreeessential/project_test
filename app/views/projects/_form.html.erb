@@ -1,0 +1,83 @@
+<%= form_for(project) do |f| %>
+  <% if project.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(project.errors.count, "error") %> prohibited this project from being saved:</h2>
+
+      <ul>
+      <% project.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+   <div class="form-group">
+    <%= f.label :project_title %>
+    <%= f.text_field :project_title, class: "form-control" %>
+  </div>
+  
+  <div class="form-group">
+    <%= f.label :project_people %>
+    <%= f.text_field :project_people, class: "form-control" %>
+  </div>
+  
+  <div class="form-group">
+    <%= f.label :project_contents %>
+    <%= f.text_area :project_contents, 'data-provider': :summernote %>
+  </div>
+  
+  <div class="tech">
+     <input type="text" placeholder="skill" class="form-control search-skill">
+  </div>
+
+  <div class="add_skill"></div></br>
+  <div class="skill_badge"></div></br>
+  <button class="submit_skills">검색</button>
+  
+  <div class="form-group">
+    <%= f.label :image_path %>
+    <%= f.file_field :image_path, class: "form-control" %>
+  </div>
+  
+   <input type="hidden" class="skill" name="skill">
+  
+  
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+<script>
+  
+  $(document).ready(function(){
+        var find_skill = ""
+        //스킬 탐색 기능
+        
+       
+        $('.search-skill').on('keyup', function(){
+            
+            var search = $(this).val();
+            $.ajax({
+                url:'/projects/search',
+                type:'POST',
+                data: {
+                    tech: search
+                }
+                
+            });
+        });
+        
+        //스킬 뱃지 달기
+        $(document).on('click', '.skill', function(){
+           find_skill += $(this).text()+"," 
+           $(".skill_badge").prepend(`<span class='delete'>${$(this).text()}x#</span>`)
+        });
+        
+        $(document).on('click','.delete',function(){
+            var index =find_skill.indexOf($(this).text());
+            find_skill.splice(index,1);
+            $(this).remove();
+        });
+  });
+  
+</script>

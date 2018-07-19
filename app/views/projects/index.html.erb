@@ -1,0 +1,30 @@
+<h1 id="project_title">Project list</h1>
+<hr>
+<input type="text" class="form-control search-project" >
+<hr>
+<div class="recomm-movie d-flex justify-content-start row">
+  
+</div>
+<hr>
+<div id="project" class="row">
+  <% @projects.each do |project| %>
+  <div class="card col-md-3">
+    <img class="card-img-top" src="<%= project.image_path.thumb.url %>" alt="<%= project.project_title%>">
+    <div class="card-body"
+     <h5 class="card-title"><span><%= project.project_title %></span></h5>
+      <p class="card-text"><%= simple_format(project.project_contents) %></p>
+      <p class="card-text">+<%= TimeDifference.between(DateTime.now, project.created_at).in_days.round(0) %>days</p>
+      <p class="card-text"><%= project.unique_impression_count %>views</p>
+     
+      
+      <%= link_to '상세보기 ', project_path(project), class: 'btn btn-primary' %>
+    </div>
+  </div>
+    <% end %>
+</div>
+
+
+
+<br>
+
+<%= link_to 'New Project', new_project_path %>

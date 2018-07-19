@@ -1,0 +1,98 @@
+<h1>프로젝트 상세보기</h2>
+<hr>
+
+<div>
+<h1><%= @project.project_title %></h1>
+<hr>
+<p><img src="<%= @project.image_path.thumb.url %>"></p>
+<p><%= @project.project_contents %></p>
+<p>인원수 : <%= @project.project_people %></p>
+<p>생성날짜 : <%= @project.created_at.strftime("%F") %></p>
+
+</div>
+<%= link_to 'Back', projects_path %>
+
+<form class="text-right comment">
+    <input class="form-control comment-contents">
+    <input type="submit" value="문의하기" class="btn btn-success">
+    
+</form>
+<hr>
+<h3>문의사항</h3>
+<hr>
+<ul class="list-group comment-list">
+<!--<li class="list-group-item">Cras justo odio</li>-->
+  <% @project.project_comments.reverse.each do |comment| %>
+  
+<li class="comment-<%= comment.id %> list-group-item d-flex justify-content-between">
+       <span class="comment-detail-<%= comment.id %>"><%= comment.comment_contents %></span>
+       <div>
+           <button data-id="<%= comment.id %>"class="btn btn-warning text-white edit-comment">수정</button>
+           <button data-id="<%= comment.id %>"class="btn btn-danger destroy-comment">삭제</button>
+       </div>
+   </li>  
+   
+  <% end %>
+  
+   
+</ul>
+
+<script>
+    $(document).on('ready', function() {
+        $('.comment').on('submit', function(e) {
+            e.preventDefault();
+            var comm = $('.comment-contents').val();
+            console.log(comm);
+        $('.comment-contents').val('');
+            $.ajax({
+                url: "/projects/<%= @project.id%>/comments",
+                method: "POST",
+                data: {
+                    comment_contents: comm
+                }
+            });
+        });
+        
+        $(document).on('click','.destroy-comment', function() {
+          console.log("destroyed");
+          var comment_id = $(this).attr('data-id');
+          console.log(comment_id);
+          $.ajax({
+              url: "/projects/comments/" + comment_id,
+              method: "delete"
+          });
+        });  
+        
+        $(document).on('click', '.edit-comment', function() {
+            if($('.update-comment').length == 0){
+            var comment_id = $(this).data('id');
+            var edit_comment = $(`.comment-detail-${comment_id}`);
+            var contents = edit_comment.text().trim();
+            edit_comment.html(`
+            <input type="text" value="${contents}" class="form-control edit-comment-${comment_id}">`);
+            $(this).text("확인").removeClass("edit-comment btn warning").addClass("update-comment btn-dark");
+            console.log(edit_comment);
+            }else{
+                alert('하나만 클릭하세요');
+                return false;
+            }
+          
+        });
+        
+        $(document).on('click', '.update-comment', function() {
+            var comment_id = $(this).data('id');
+            var comment_form = $(`.edit-comment-${comment_id}`);
+            $.ajax({
+                url: "/projects/comments/" + comment_id,
+                method: "patch",
+                data: {
+                    comment_contents: comment_form.val()
+                }
+            })
+        });
+        
+        
+        
+    });
+    
+</script>
